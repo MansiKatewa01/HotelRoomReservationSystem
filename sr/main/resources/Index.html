@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Room Reservation</title>
+    <script defer src="/script.js"></script>
+</head>
+<body>
+    <h1>Hotel Room Reservation</h1>
+    <label for="numRooms">Number of Rooms:</label>
+    <input type="number" id="numRooms" min="1" max="5">
+    <button onclick="bookRooms()">Book</button>
+    <button onclick="resetRooms()">Reset</button>
+
+    <h2>Available Rooms</h2>
+    <ul id="availableRooms"></ul>
+
+    <h2>Booked Rooms</h2>
+    <ul id="bookedRooms"></ul>
+</body>
+</html>
