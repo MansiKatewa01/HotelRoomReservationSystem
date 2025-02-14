@@ -6,28 +6,35 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/rooms")
-@CrossOrigin(origins = "*")
+@Controller
 public class RoomController {
-    private final RoomService roomService;
 
-    public RoomController(RoomService roomService) {
-        this.roomService = roomService;
+    @Autowired
+    private RoomService roomService;
+
+    @GetMapping("/")
+    public String showRoomAvailability(Model model) {
+        List<Room> availableRooms = roomService.getAvailableRooms();
+        model.addAttribute("availableRooms", availableRooms);
+        return "index";  // Thymeleaf template
     }
 
-    @GetMapping("/available")
-    public List<Room> getAvailableRooms() {
-        return roomService.getAvailableRooms();
+    @PostMapping("/bookRooms")
+    public String bookRooms(@RequestParam("numOfRooms") int numOfRooms, Model model) {
+        String result = roomService.bookRooms(numOfRooms);
+        model.addAttribute("result", result);
+        return "redirect:/";
     }
 
-    @PostMapping("/book/{numRooms}")
-    public List<Room> bookRooms(@PathVariable int numRooms) {
-        return roomService.bookRooms(numRooms);
+    @PostMapping("/generateOccupancy")
+    public String generateRandomOccupancy(Model model) {
+        roomService.generateRandomOccupancy();
+        return "redirect:/";
     }
 
-    @PostMapping("/reset")
-    public void resetBookings() {
+    @PostMapping("/resetBooking")
+    public String resetBooking(Model model) {
         roomService.resetBookings();
+        return "redirect:/";
     }
 }
