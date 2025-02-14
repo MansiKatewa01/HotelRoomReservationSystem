@@ -7,55 +7,68 @@ import java.util.*;
 
 @Service
 public class RoomService {
-    private final List<Room> rooms = new ArrayList<>();
 
+    private Map<Integer, List<Room>> hotelRooms = new HashMap<>();
+    
+    // Constructor: Initialize rooms in hotel
     public RoomService() {
-        initializeRooms();
-    }
-
-    private void initializeRooms() {
-        for (int floor = 1; floor <= 9; floor++) {
-            for (int i = 1; i <= 10; i++) {
-                rooms.add(new Room(floor, floor * 100 + i));
+        for (int i = 1; i <= 9; i++) {
+            hotelRooms.put(i, new ArrayList<>());
+            for (int j = 1; j <= 10; j++) {
+                hotelRooms.get(i).add(new Room(i + "" + (j < 10 ? "0" + j : j)));
             }
         }
+        hotelRooms.put(10, new ArrayList<>());
         for (int i = 1; i <= 7; i++) {
-            rooms.add(new Room(10, 1000 + i));
+            hotelRooms.get(10).add(new Room("100" + i));
         }
     }
 
     public List<Room> getAvailableRooms() {
-        List<Room> available = new ArrayList<>();
-        for (Room room : rooms) {
-            if (!room.isBooked()) {
-                available.add(room);
+        List<Room> availableRooms = new ArrayList<>();
+        for (Map.Entry<Integer, List<Room>> entry : hotelRooms.entrySet()) {
+            for (Room room : entry.getValue()) {
+                if (!room.isBooked()) {
+                    availableRooms.add(room);
+                }
             }
         }
-        return available;
+        return availableRooms;
     }
 
-    public List<Room> bookRooms(int numRooms) {
+    public String bookRooms(int numOfRooms) {
         List<Room> availableRooms = getAvailableRooms();
-        if (availableRooms.size() < numRooms) {
-            return Collections.emptyList(); // Not enough rooms available
+        if (availableRooms.size() < numOfRooms) {
+            return "Not enough rooms available.";
         }
 
-        availableRooms.sort(Comparator.comparingInt(Room::getFloor)
-                .thenComparingInt(Room::getNumber));
-
-        List<Room> selectedRooms = new ArrayList<>();
+        // Implement logic based on rules
+        List<Room> bookedRooms = new ArrayList<>();
         for (Room room : availableRooms) {
-            if (selectedRooms.size() < numRooms) {
+            if (bookedRooms.size() < numOfRooms) {
                 room.setBooked(true);
-                selectedRooms.add(room);
+                bookedRooms.add(room);
             }
         }
-        return selectedRooms;
+
+        return "Rooms booked: " + bookedRooms.stream().map(Room::getRoomNumber).collect(Collectors.joining(", "));
     }
 
     public void resetBookings() {
-        for (Room room : rooms) {
-            room.setBooked(false);
+        for (Map.Entry<Integer, List<Room>> entry : hotelRooms.entrySet()) {
+            for (Room room : entry.getValue()) {
+                room.setBooked(false);
+            }
+        }
+    }
+
+    // Simulate random occupancy
+    public void generateRandomOccupancy() {
+        Random rand = new Random();
+        for (Map.Entry<Integer, List<Room>> entry : hotelRooms.entrySet()) {
+            for (Room room : entry.getValue()) {
+                room.setBooked(rand.nextBoolean());
+            }
         }
     }
 }
