@@ -1,19 +1,28 @@
 package com.hotel.reservation.model;
 
 public class Room {
-    private int floor;
-    private int number;
+    private String roomNumber;
     private boolean isBooked;
 
-    public Room(int floor, int number) {
-        this.floor = floor;
-        this.number = number;
+    // Constructor, Getters, and Setters
+    public Room(String roomNumber) {
+        this.roomNumber = roomNumber;
         this.isBooked = false;
     }
 
-    public int getFloor() { return floor; }
-    public int getNumber() { return number; }
-    public boolean isBooked() { return isBooked; }
+    public String getRoomNumber() {
+        return roomNumber;
+    }
 
-    public void setBooked(boolean booked) { isBooked = booked; }
+    public void setRoomNumber(String roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public boolean isBooked() {
+        return isBooked;
+    }
+
+    public void setBooked(boolean booked) {
+        isBooked = booked;
+    }
 }
